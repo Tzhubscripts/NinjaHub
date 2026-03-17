@@ -1,15 +1,15 @@
 --[[ 
-  Script: T' Khub - Escape Tsunami (Brainrot Edition) - V8 (Ghost Farm)
+  Script: T' Khub - Escape Tsunami (Brainrot Edition) - V9 (Turbo & Direct)
   Author: Manus AI
   Data: 14/03/2026
   Interface: NATIVA Roblox (compatível com Delta Executor)
 ]]
 
 -- Aviso de Carregamento Imediato
-print("T' Khub V8 (Ghost Farm): Tentando carregar...");
+print("T' Khub V9 (Turbo & Direct): Tentando carregar...");
 local loadingNotification = Instance.new("Message");
 loadingNotification.Parent = game:GetService("Workspace");
-loadingNotification.Text = "T' Khub V8 CARREGADO! (Verifique a GUI)";
+loadingNotification.Text = "T' Khub V9 CARREGADO! (Verifique a GUI)";
 game:GetService("Debris"):AddItem(loadingNotification, 5); -- Remove a mensagem após 5 segundos
 
 local Players = game:GetService("Players");
@@ -27,7 +27,7 @@ _G.Settings = {
         AutoWin = false,
         AutoFarmBruteForce = false, -- Toggle para o Brute Force
         SelectedRarity = "All", -- Raridade selecionada
-        GhostFarm = false -- Novo toggle para o Ghost Farm
+        GhostFarm = false -- Toggle para o Ghost Farm
     },
     Player = {
         SpeedHack = false,
@@ -64,7 +64,7 @@ end
 
 -- Cria a ScreenGui principal
 local ScreenGui = Instance.new("ScreenGui");
-ScreenGui.Name = "T_Khub_GUI_V8";
+ScreenGui.Name = "T_Khub_GUI_V9";
 ScreenGui.Parent = CoreGui;
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling;
 
@@ -95,7 +95,7 @@ TitleLabel.Parent = TopBar;
 TitleLabel.Size = UDim2.new(1, -40, 1, 0);
 TitleLabel.Position = UDim2.new(0, 10, 0, 0);
 TitleLabel.BackgroundTransparency = 1;
-TitleLabel.Text = "T' Khub - Escape Tsunami V8 (Ghost Farm)";
+TitleLabel.Text = "T' Khub - Escape Tsunami V9 (Turbo & Direct)";
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255);
 TitleLabel.Font = Enum.Font.GothamBold;
 TitleLabel.TextSize = 16;
@@ -249,7 +249,7 @@ mainPage.Visible = true;
 -- Conteúdo da Aba Auto Farm
 AddRarityDropdown(mainPage);
 AddToggle(mainPage, "Auto Farm (Brute Force)", function(v) _G.Settings.Main.AutoFarmBruteForce = v end);
-AddToggle(mainPage, "Ghost Farm (Enterrado)", function(v) _G.Settings.Main.GhostFarm = v end); -- Novo toggle
+AddToggle(mainPage, "Ghost Farm (Enterrado)", function(v) _G.Settings.Main.GhostFarm = v end); 
 AddToggle(mainPage, "Auto Win (SafeZone)", function(v) _G.Settings.Main.AutoWin = v end);
 
 -- Conteúdo da Aba Player
@@ -303,7 +303,7 @@ end)
 
 -- Função para verificar raridade do Brainrot (aprimorada)
 local function checkRarity(obj)
-    local selected = _G.Settings.Settings.Main.SelectedRarity;
+    local selected = _G.Settings.Main.SelectedRarity;
     if selected == "All" then return true end
     
     local name = obj.Name:lower();
@@ -334,19 +334,21 @@ spawn(function()
             if Humanoid.Health < 20 and Humanoid.Health > 0 then 
                 print("T' Khub: Vida baixa! Auto Farm pausado por 3 segundos.");
                 _G.Settings.Main.AutoFarmBruteForce = false; -- Desativa o toggle
+                -- O usuário terá que reativar manualmente para garantir segurança
                 wait(3); -- Espera para recuperação
             end
 
             local itemsToCollect = {};
             for _, v in pairs(game:GetService("Workspace"):GetDescendants()) do
                 if v:IsA("TouchTransmitter") and v.Parent and v.Parent:IsA("BasePart") then
-                    -- Filtro de altura: só coleta se o item estiver acima de um certo nível (ex: 0 ou 5)
-                    -- Ajuste este valor (5) se o chão do jogo for mais baixo ou mais alto
-                    if v.Parent.Position.Y > 5 then 
-                        -- Verifica a raridade antes de adicionar à lista de coleta
-                        if checkRarity(v.Parent) then
-                            table.insert(itemsToCollect, v.Parent);
-                        end
+                    -- REMOVIDO: Filtro de altura (v.Parent.Position.Y > 5)
+                    -- Agora coleta independentemente da altura, o Ghost Farm cuidará da segurança
+                    
+                    -- Verifica a raridade antes de adicionar à lista de coleta
+                    if checkRarity(v.Parent) then
+                        table.insert(itemsToCollect, v.Parent);
+                        -- NOVO: Aviso de detecção no chat
+                        LocalPlayer:SendMessage("Item detectado: " .. v.Parent.Name .. " (Raridade: " .. _G.Settings.Main.SelectedRarity .. ")");
                     end
                 end
             end
@@ -379,4 +381,4 @@ spawn(function()
     end
 end)
 
-print("T' Khub V8 (Ghost Farm) carregado!")
+print("T' Khub V9 (Turbo & Direct) carregado!")
